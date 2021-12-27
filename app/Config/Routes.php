@@ -36,7 +36,11 @@ $routes->get("/graph",'Home::graph');
 $routes->get("/form","Home::form");
 $routes->get("/about","Home::about");
 $routes->get("/profile","Home::profile");
+$routes->get("/register","Home::register");
+$routes->get("/sign_out","Home::signOut");
 
+$routes->post("/create/account","Functions::createAccount");
+$routes->post("/authenticate","Functions::authenticate");
 /*
  * --------------------------------------------------------------------
  * Additional Routing

@@ -15,6 +15,7 @@ use CodeIgniter\API\ResponseTrait;
 
 // model
 // TODO: IMPORT MODELS: use \App\Models\model;
+use \App\Models\Users;
 
 /**
  * Class BaseController
@@ -28,13 +29,14 @@ use CodeIgniter\API\ResponseTrait;
  */
 class BaseController extends Controller
 {
+    use ResponseTrait;
     /**
      * Instance of the main Request object.
      *
      * @var CLIRequest|IncomingRequest
      */
     protected $request;
-
+    
     /**
      * An array of helpers to be loaded automatically upon
      * class instantiation. These helpers will be available
@@ -42,7 +44,7 @@ class BaseController extends Controller
      *
      * @var array
      */
-    protected $helpers = [];
+    protected $helpers = ['url','filesystem'];
 
     /**
      * Constructor.
@@ -51,6 +53,9 @@ class BaseController extends Controller
     {
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
+
+        // init models
+        $this->userModel = new Users();
 
 		// preload services
 		$this->session = \Config\Services::session();
@@ -61,20 +66,21 @@ class BaseController extends Controller
 
     // Generate page
     public function generatePage(string $filename, 
-    $data,
+    array $data = [],
     string $header_path = "layout/header.php", 
     string $footer_path = "layout/footer.php"){
-        echo view($header_path, $data);
+        if($header_path){echo view($header_path, $data);}        
         echo view("pages/".$filename, $data);
-        echo view($footer_path, $data);
+        if($footer_path){echo view($footer_path, $data);}   
     }
 
-    public function mapPageArguments(string $title, bool $is_image, string $banner_path,  array $others = []){
+    public function mapPageArguments(string $title, bool $is_image = false, string $banner_path = '',  array $others = []){
         return [
             'page_title' => $title,
             'base_url' => base_url(),
             'is_image' => $is_image,
             'banner_path' => base_url()."/".$banner_path,
+            'is_login' => $this->session->has("is_login"),
             $others,
         ];
     }

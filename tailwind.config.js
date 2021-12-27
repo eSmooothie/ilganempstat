@@ -21,14 +21,8 @@ module.exports = {
       '6xl': '4rem',
       '7xl': '5rem',
     },
-    fontFamily: {
-      'sans': ['ui-sans-serif', 'system-ui'],
-      'serif': ['ui-serif', 'Georgia'],
-      'mono': ['ui-monospace', 'SFMono-Regular'],
-      'display': ['Oswald'],
-      'body': ['"Open Sans"'],
-      'roboto' : ['"Roboto"'],
-    },
   },
-  plugins: [],
+  plugins: [
+    require('@themesberg/flowbite/plugin'),
+  ],
 }
