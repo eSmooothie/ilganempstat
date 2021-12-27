@@ -9,6 +9,13 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+// services
+use CodeIgniter\I18n\Time;
+use CodeIgniter\API\ResponseTrait;
+
+// model
+// TODO: IMPORT MODELS: use \App\Models\model;
+
 /**
  * Class BaseController
  *
@@ -45,8 +52,30 @@ class BaseController extends Controller
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
 
-        // Preload any models, libraries, etc, here.
+		// preload services
+		$this->session = \Config\Services::session();
+		$this->uri = service('uri');
+		$this->time = new Time();
+		$this->queryBuilder	= \Config\Database::connect();
+    }
 
-        // E.g.: $this->session = \Config\Services::session();
+    // Generate page
+    public function generatePage(string $filename, 
+    $data,
+    string $header_path = "layout/header.php", 
+    string $footer_path = "layout/footer.php"){
+        echo view($header_path, $data);
+        echo view("pages/".$filename, $data);
+        echo view($footer_path, $data);
+    }
+
+    public function mapPageArguments(string $title, bool $is_image, string $banner_path,  array $others = []){
+        return [
+            'page_title' => $title,
+            'base_url' => base_url(),
+            'is_image' => $is_image,
+            'banner_path' => base_url()."/".$banner_path,
+            $others,
+        ];
     }
 }
