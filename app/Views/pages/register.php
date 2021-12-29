@@ -25,6 +25,23 @@
                 <p class="font-medium text-center">Create Account</p>
             </div>
             <div class="mb-6">
+                <label for="firstname" 
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">First Name</label>
+                <input type="text" id="firstname" name="firstname" class="bg-gray-50 border border-gray-300 
+                text-gray-900 text-sm rounded-lg focus:ring-blue-500 
+                focus:border-blue-500 block w-full p-2.5 
+                " placeholder="" required>
+            </div>
+            <div class="mb-6">
+                <label for="lastname" 
+                class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Last Name</label>
+                <input type="text" id="lastname" name="lastname" class="bg-gray-50 border border-gray-300 
+                text-gray-900 text-sm rounded-lg focus:ring-blue-500 
+                focus:border-blue-500 block w-full p-2.5 
+                " placeholder="" required>
+            </div>
+            <hr class="mb-2">
+            <div class="mb-6">
                 <label for="username" 
                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-gray-300">Username</label>
                 <input type="text" id="username" name="username" class="bg-gray-50 border border-gray-300 
@@ -72,10 +89,10 @@
             e.preventDefault();
 
             const formData = $(this).serializeArray();
-
+            console.log(formData);
             // validate password
-            const pass = formData[1]['value'];
-            const confirm_pass = formData[2]['value'];
+            const pass = formData[3]['value'];
+            const confirm_pass = formData[4]['value'];
             const is_match = pass.localeCompare(confirm_pass);
 
             if(is_match != 0){
@@ -100,9 +117,7 @@
                         }else{
                             document.getElementById('suc_msg_container').classList.remove("hidden");
                             document.getElementById('err_msg_container').classList.add("hidden");
-                            document.getElementById('password').value = '';
-                            document.getElementById('confirm_password').value = '';
-                            document.getElementById('username').value = '';
+                            document.getElementById('register').reset();
                         }
                     },
                 });

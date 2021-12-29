@@ -23,16 +23,6 @@ const app = initializeApp(firebaseConfig);
 
 // Get database
 const db = getDatabase();
-
-
-function addData(barangay, lng, lat){
-  set(ref(db, 'Barangays/'+ barangay), {
-    Barangay: barangay, 
-    lat: lat,
-    lng : lng
-  });
-}
-
 // get a reference of the table
 const dbRef = ref(db, 'Barangays/');
 

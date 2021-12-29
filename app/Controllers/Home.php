@@ -20,8 +20,18 @@ class Home extends BaseController
 
     public function form(){
 
+        $establishments = $this->establishmentModel->findAll();
+        $barangays = $this->barangayModel
+        ->orderBy('NAME','ASC')
+        ->findAll();
+
+        $args = [
+            'establishments' => $establishments,
+            'barangays' => $barangays,
+        ];
+
         $page_path = "form.php";
-        $data = $this->mapPageArguments('GRAPH', true, 'assets/images/graph_banner_1.jpg');
+        $data = $this->mapPageArguments('GRAPH', true, 'assets/images/graph_banner_1.jpg', $args);
         $this->generatePage($page_path, $data);
     }
 
@@ -43,7 +53,7 @@ class Home extends BaseController
 
         $page_path = "register.php";
         $data = $this->mapPageArguments('CREATE ACCOUNT');
-        $this->generatePage($page_path, $data, '', '');
+        $this->generatePage($page_path, $data, '','');
     }
 
     public function signOut(){

@@ -1,3 +1,4 @@
+
 function sendPostRequest({path, data, done = function(data){console.log(data);}, fail = function(xhr){console.log(xhr);}} = {}){
 
     const baseUrl = window.location.origin;

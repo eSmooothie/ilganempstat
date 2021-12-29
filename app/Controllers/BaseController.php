@@ -16,7 +16,9 @@ use CodeIgniter\API\ResponseTrait;
 // model
 // TODO: IMPORT MODELS: use \App\Models\model;
 use \App\Models\Users;
-
+use \App\Models\Employment;
+use \App\Models\Establishment;
+use \App\Models\Barangay;
 /**
  * Class BaseController
  *
@@ -56,6 +58,9 @@ class BaseController extends Controller
 
         // init models
         $this->userModel = new Users();
+        $this->establishmentModel = new Establishment();
+        $this->employmentModel = new Employment();
+        $this->barangayModel = new Barangay();
 
 		// preload services
 		$this->session = \Config\Services::session();
@@ -66,22 +71,29 @@ class BaseController extends Controller
 
     // Generate page
     public function generatePage(string $filename, 
-    array $data = [],
+    array $default_data = [],
     string $header_path = "layout/header.php", 
-    string $footer_path = "layout/footer.php"){
-        if($header_path){echo view($header_path, $data);}        
-        echo view("pages/".$filename, $data);
-        if($footer_path){echo view($footer_path, $data);}   
+    string $footer_path = "layout/footer.php",
+    ){
+        if($header_path){echo view($header_path, $default_data);}        
+        echo view("pages/".$filename, $default_data);
+        if($footer_path){echo view($footer_path, $default_data);}   
     }
 
     public function mapPageArguments(string $title, bool $is_image = false, string $banner_path = '',  array $others = []){
-        return [
+        
+        return (empty($others))? [
             'page_title' => $title,
             'base_url' => base_url(),
             'is_image' => $is_image,
             'banner_path' => base_url()."/".$banner_path,
             'is_login' => $this->session->has("is_login"),
-            $others,
-        ];
+        ]: array_merge([
+            'page_title' => $title,
+            'base_url' => base_url(),
+            'is_image' => $is_image,
+            'banner_path' => base_url()."/".$banner_path,
+            'is_login' => $this->session->has("is_login"),
+        ], $others);
     }
 }

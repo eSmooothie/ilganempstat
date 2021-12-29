@@ -41,6 +41,8 @@ $routes->get("/sign_out","Home::signOut");
 
 $routes->post("/create/account","Functions::createAccount");
 $routes->post("/authenticate","Functions::authenticate");
+$routes->post("/add_new_establishment","Functions::newEstablishment");
+$routes->post("/addEmployementData","Functions::addEmployementData");
 /*
  * --------------------------------------------------------------------
  * Additional Routing
