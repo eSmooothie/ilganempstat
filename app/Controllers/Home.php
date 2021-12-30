@@ -31,21 +31,33 @@ class Home extends BaseController
         ];
 
         $page_path = "form.php";
-        $data = $this->mapPageArguments('GRAPH', true, 'assets/images/graph_banner_1.jpg', $args);
+        $data = $this->mapPageArguments('FORM', true, 'assets/images/graph_banner_1.jpg', $args);
         $this->generatePage($page_path, $data);
     }
 
     public function about(){
 
         $page_path = "about.php";
-        $data = $this->mapPageArguments('GRAPH', true, 'assets/images/graph_banner_1.jpg');
+        $data = $this->mapPageArguments('ABOUT', true, 'assets/images/graph_banner_1.jpg');
         $this->generatePage($page_path, $data);
     }
 
     public function profile(){
 
+        $user_id = $this->session->get("user_id");
+        $user_info = $this->userModel->find($user_id);
+        $year =  $this->employmentModel
+        ->select("
+            DISTINCT(YEAR(`DATE`)) AS `year`
+        ")->findAll();
+
+        $args = [
+            'user' => $user_info,
+            'year' => $year
+        ];
+        
         $page_path = "profile.php";
-        $data = $this->mapPageArguments('GRAPH', true, 'assets/images/graph_banner_1.jpg');
+        $data = $this->mapPageArguments('PROFILE', true, 'assets/images/graph_banner_1.jpg', $args);
         $this->generatePage($page_path, $data);
     }
 

@@ -43,6 +43,9 @@ $routes->post("/create/account","Functions::createAccount");
 $routes->post("/authenticate","Functions::authenticate");
 $routes->post("/add_new_establishment","Functions::newEstablishment");
 $routes->post("/addEmployementData","Functions::addEmployementData");
+
+// PDF
+$routes->get("/downloadReport/(:segment)","Functions::downloadReport/$1");
 /*
  * --------------------------------------------------------------------
  * Additional Routing
