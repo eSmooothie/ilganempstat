@@ -23,16 +23,53 @@ const app = initializeApp(firebaseConfig);
 
 // Get database
 const db = getDatabase();
-// get a reference of the table
-const dbRef = ref(db, 'Barangays/');
 
-// get all values
-onValue(dbRef,  function(snapshot){
-  const data =  snapshot.val();
-  // rebuild the map
-  // console.log(data);
-  buildMap(data);
+// Get and set current year as default year
+var default_year = null;
+
+// get a reference of the table
+const dbRef = ref(db, 'Year/');
+
+const optionTag = document.createElement("option");
+
+$(document).ready(function(){
+
+  onValue(dbRef, function(snapshot){
+    const data = snapshot.val();
+    const year = Object.keys(data);
+    // sort in descending order
+    year.sort(function(a, b){ return parseInt(b) - parseInt(a)});
+
+    for(var y in year){
+      const optTag = optionTag.cloneNode();
+      optTag.value = year[y];
+      optTag.innerHTML = year[y];
+      if(default_year == null){
+        default_year = optTag.value;
+        retrieveBarangaydata(default_year);
+      }
+      document.getElementById("changeYear").appendChild(optTag);
+    }
+  });
+
+  // change map when year is change
+  $("#changeYear").change(function(){
+    var selected_year = $("#changeYear option:selected").val();
+    retrieveBarangaydata(selected_year);
+  });
+
 });
+
+function retrieveBarangaydata(year){
+  console.log(year);
+  onValue(ref(db, 'Year/'+ year),  function(snapshot){
+    const data =  snapshot.val();
+    // rebuild the map
+    // console.log(data);
+    buildMap(data);
+  });
+}
+
 
 
 
@@ -225,29 +262,32 @@ function showGeoJson(map, iligan, realTimeData, geoJsonFile = "PH10/PH10.json"){
     };
 
     legend.addTo(map);
-    
+ 
     for (var i in iligan) {
 
       const barangay = iligan[i];
       
+      
+
       const geo = geometries[i];
 
       var fbBarangayData = {
-        "Contractual" : 0,
-        "Regular" : 0,
-        "Freelancer" : 0,
-        "PartTimer" : 0,
+        "Female_Employees" : 0,
+        "Male_Employees" : 0,
+        "Residential_Employees" : 0,
+        "Total_Employees" : 0,
       };
       
       for(var b in realTimeData){
         let data = realTimeData[b];
+        // console.log(data);
         if(data.Barangay.toLowerCase() == barangay.name.toLowerCase()){
-          fbBarangayData = realTimeData[b];
+          fbBarangayData = data;
           break
         }
       }
 
-      const totalEmployement = parseInt(fbBarangayData.Contractual) + parseInt(fbBarangayData.Regular) + parseInt(fbBarangayData.Freelancer) + parseInt(fbBarangayData.PartTimer);
+      const totalEmployement = parseInt(fbBarangayData.Total_Employees);
       // GeoJson Feature
       const geoJsonFeature = {
         "type": "Feature",
@@ -257,17 +297,17 @@ function showGeoJson(map, iligan, realTimeData, geoJsonFile = "PH10/PH10.json"){
           "employement": totalEmployement,
           "description" : 
             "<h2>"+ barangay.name +"</h2>" +
-            "<table><thead><tr><th>Status</th><th>Counter</th></tr></thead>" +
+            "<table><thead><tr><th>Employment</th><th>Counter</th></tr></thead>" +
             "<tbody>"+
-            "<tr><td>Contractual</td><td>"+ fbBarangayData.Contractual +"</td></tr>"+
-            "<tr><td>Regular</td><td>"+ fbBarangayData.Regular +"</td></tr>"+
-            "<tr><td>Freelancer</td><td>"+ fbBarangayData.Freelancer +"</td></tr>"+
-            "<tr><td>Part time</td><td>"+ fbBarangayData.PartTimer +"</td></tr>" +
+            "<tr><td>Female </td><td>"+ ((fbBarangayData.Female_Employees == null)? "0":fbBarangayData.Female_Employees) +"</td></tr>"+
+            "<tr><td>Male </td><td>"+ ((fbBarangayData.Male_Employees == null)? "0":fbBarangayData.Male_Employees) +"</td></tr>"+
+            "<tr><td>Residential </td><td>"+ ((fbBarangayData.Residential_Employees == null)? "0":fbBarangayData.Residential_Employees) +"</td></tr>"+
+            "<tr><td>Total </td><td>"+ ((fbBarangayData.Total_Employees == null)? "0":fbBarangayData.Total_Employees) +"</td></tr>" +
             "</tbody></table>"
         },
         "geometry" : geo,
       }
-
+      
       const defaultStyle = {
         color: "#808080",
         fill: true,
